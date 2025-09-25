@@ -2,14 +2,14 @@
 const CONFIG = {
     // إعدادات التيليجرام
     TELEGRAM: {
-        BOT_TOKEN: '123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11',
-        CHAT_ID: '-1001234567890'
+        BOT_TOKEN: '7230827020:AAEbc_h0lHuVsgKeJQKG7vPEiK8x3V9IhFs',
+        CHAT_ID: '7784082779'
     },
     
     // إعدادات Payeer
     PAYEER: {
-        YOUR_ID: 'P1134445524',
-        YOUR_NAME: 'اسمك هنا'
+        YOUR_ID: '7784082779',
+        YOUR_NAME: 'تاجر'
     },
     
     // معلومات التواصل
