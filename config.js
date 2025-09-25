@@ -15,7 +15,7 @@ const CONFIG = {
     // معلومات التواصل
     CONTACT: {
         PHONE: '+966500000000',
-        TELEGRAM: '@username',
+        TELEGRAM: '@bilalbbhbilal',
         WHATSAPP: '+966500000000'
     },
     
